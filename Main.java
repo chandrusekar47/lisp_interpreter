@@ -34,11 +34,78 @@ class Token {
     }
 }
 
+class Scanner {
+    private Integer lookaheadCharacter = null;
+    private InputStream inputStream = System.in;
+    private Token currentToken;
+
+    public Scanner(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    public void moveToNextToken() throws IOException {
+        StringBuilder tokenBuffer = new StringBuilder();
+        if (lookaheadCharacter != null) {
+            if (lookaheadCharacter == '(') {
+                lookaheadCharacter = null;
+                this.currentToken = new Token('(', TokenType.OPEN_PARANTHESIS);
+                return;
+            } else if (lookaheadCharacter == ')') {
+                lookaheadCharacter = null;
+                this.currentToken = new Token(')', TokenType.CLOSE_PARANTHESIS);
+                return;
+            } else if (lookaheadCharacter == -1) {
+                lookaheadCharacter = null;
+                this.currentToken = new Token(null, TokenType.EOF);
+                return;
+            }
+        }
+        while (true) {
+            int currentCharacter = inputStream.read();
+            if (currentCharacter == -1) {
+                if (tokenBuffer.length() == 0) {
+                    this.currentToken = new Token(null, TokenType.EOF);
+                    return;
+                }
+                break;
+            }
+            if (isWhitespace(currentCharacter)) {
+                if (tokenBuffer.length() != 0) {
+                    break;
+                }
+            } else if (currentCharacter == '(' || currentCharacter == ')') {
+                if (tokenBuffer.length() == 0) {
+                    lookaheadCharacter = null;
+                    this.currentToken = new Token((char) currentCharacter, currentCharacter == '(' ? TokenType.OPEN_PARANTHESIS : TokenType.CLOSE_PARANTHESIS);
+                    return;
+                }
+                lookaheadCharacter = currentCharacter;
+                break;
+            } else {
+                tokenBuffer.append((char) currentCharacter);
+            }
+        }
+        if (isNumber(tokenBuffer)) {
+            this.currentToken = new Token(Integer.parseInt(tokenBuffer.toString()), TokenType.NUMERIC_ATOM);
+            return;
+        }
+        if (isDigit(tokenBuffer.charAt(0))) {
+            this.currentToken = new Token(tokenBuffer.toString(), TokenType.ERROR);
+            return;
+        }
+        this.currentToken = new Token(tokenBuffer.toString(), TokenType.LITERAL_ATOM);
+    }
+
+    public Token getCurrentToken() {
+        return this.currentToken;
+    }
+
+    private boolean isNumber(StringBuilder tokenBuffer) {
+        return tokenBuffer.toString().matches("^\\d+$");
+    }
+}
 
 public class Main {
-
-    private static Integer lookaheadCharacter = null;
-    public static InputStream inputStream = System.in;
 
     public static void main(String[] args) throws IOException {
         List<String> literalTokens = new ArrayList<>();
@@ -46,9 +113,11 @@ public class Main {
         int countOfNumericTokens = 0;
         int countOfClosingParenthesis = 0;
         int countOfOpeningParenthesis = 0;
+        Scanner scanner = new Scanner(System.in);
         Token currentToken;
         while (true) {
-            currentToken = getNextToken();
+            scanner.moveToNextToken();
+            currentToken = scanner.getCurrentToken();
             if (currentToken.getTokenType() == TokenType.EOF)
                 break;
             if (currentToken.getTokenType() == TokenType.ERROR) {
@@ -70,53 +139,4 @@ public class Main {
         System.out.println(format("CLOSING PARENTHESES: %d", countOfClosingParenthesis));
     }
 
-    public static Token getNextToken() throws IOException {
-        StringBuilder tokenBuffer = new StringBuilder();
-        if (lookaheadCharacter != null) {
-            if (lookaheadCharacter == '(') {
-                lookaheadCharacter = null;
-                return new Token('(', TokenType.OPEN_PARANTHESIS);
-            } else if (lookaheadCharacter == ')') {
-                lookaheadCharacter = null;
-                return new Token(')', TokenType.CLOSE_PARANTHESIS);
-            } else if (lookaheadCharacter == -1) {
-                lookaheadCharacter = null;
-                return new Token(null, TokenType.EOF);
-            }
-        }
-        while (true) {
-            int currentCharacter = inputStream.read();
-            if (currentCharacter == -1) {
-                if (tokenBuffer.length() == 0) {
-                    return new Token(null, TokenType.EOF);
-                }
-                break;
-            }
-            if (isWhitespace(currentCharacter)) {
-                if (tokenBuffer.length() != 0) {
-                    break;
-                }
-            } else if (currentCharacter == '(' || currentCharacter == ')') {
-                if (tokenBuffer.length() == 0) {
-                    lookaheadCharacter = null;
-                    return new Token((char) currentCharacter, currentCharacter == '(' ? TokenType.OPEN_PARANTHESIS : TokenType.CLOSE_PARANTHESIS);
-                }
-                lookaheadCharacter = currentCharacter;
-                break;
-            } else {
-                tokenBuffer.append((char) currentCharacter);
-            }
-        }
-        if (isNumber(tokenBuffer)) {
-            return new Token(Integer.parseInt(tokenBuffer.toString()), TokenType.NUMERIC_ATOM);
-        }
-        if (isDigit(tokenBuffer.charAt(0))) {
-            return new Token(tokenBuffer.toString(), TokenType.ERROR);
-        }
-        return new Token(tokenBuffer.toString(), TokenType.LITERAL_ATOM);
-    }
-
-    private static boolean isNumber(StringBuilder tokenBuffer) {
-        return tokenBuffer.toString().matches("^\\d+$");
-    }
 }
