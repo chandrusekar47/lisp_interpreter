@@ -5,7 +5,7 @@ public class TreeNode {
 
     private TreeNode rightChild;
 
-    private Token cellToken = new Token(null, TokenType.NIL);
+    private Token cellToken;
 
     public TreeNode(TreeNode leftChild, TreeNode rightChild, Token cellToken) {
         this.leftChild = leftChild;
@@ -14,23 +14,7 @@ public class TreeNode {
     }
 
     public TreeNode() {
-    }
-
-    public Token getCellToken() {
-        return cellToken;
-    }
-
-    public TreeNode getLeftChild() {
-        return leftChild;
-    }
-
-    public TreeNode getRightChild() {
-        return rightChild;
-    }
-
-    public void updateLeftChild(Token currentToken) {
-        this.leftChild = new TreeNode();
-        this.leftChild.cellToken = currentToken;
+        this(null, null, null);
     }
 
     public TreeNode createEmptyRightChild() {
@@ -38,11 +22,25 @@ public class TreeNode {
         return rightChild;
     }
 
+    public TreeNode createEmptyLeftChild() {
+        leftChild = new TreeNode();
+        return leftChild;
+    }
+
     public String toString() {
         if (this.cellToken != null && (this.cellToken.isAtom() || this.cellToken.isNil())) {
             return this.cellToken.getTokenValue().toString();
         }
-        return "(" + leftChild.toString() + " . " + rightChild.toString() + ")";
+        if (leftChild != null && rightChild == null) {
+            return leftChild.toString();
+        }
+        if (leftChild != null) {
+            return "(" + leftChild.toString() + " . " + rightChild.toString() + ")";
+        }
+        return "";
     }
 
+    public void setCellToken(Token cellToken) {
+        this.cellToken = cellToken;
+    }
 }

@@ -1,44 +1,46 @@
 package cs.pl.lisp;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 public class Parser {
     private final Scanner scanner;
-    private final TreeNode rootNode;
+    private PrintStream outputStream;
 
-    public Parser(Scanner scanner) {
+    public Parser(Scanner scanner, OutputStream outputStream) {
         this.scanner = scanner;
-        rootNode = new TreeNode();
+        this.outputStream = new PrintStream(outputStream);
     }
 // <start> := <Expr> <Start> | <Expr> eof
 // <Expr> := atom | ( <List> )
 // <List> := <Expr> <List> | <empty-string>
 
     public void start() throws IOException {
-        TreeNode currentNode = this.rootNode;
+        scanner.moveToNextToken();
         do {
+            TreeNode currentNode = new TreeNode();
             parseExpr(currentNode);
-            currentNode = this.rootNode.createEmptyRightChild();
+            outputStream.println(currentNode.toString());
         } while (scanner.getCurrentToken().getTokenType() != TokenType.EOF);
     }
 
-    private void parseExpr(TreeNode currentExprNode) throws IOException {
+    private void parseExpr(TreeNode rootNode) throws IOException {
         if (scanner.getCurrentToken().isAtom()) {
-            currentExprNode.updateLeftChild(scanner.getCurrentToken());
+            rootNode.setCellToken(scanner.getCurrentToken());
             scanner.moveToNextToken();
         } else if (scanner.getCurrentToken().getTokenType() == TokenType.OPEN_PARENTHESIS) {
             scanner.moveToNextToken();
+            TreeNode currentNode = rootNode;
             while (scanner.getCurrentToken().getTokenType() != TokenType.CLOSE_PARENTHESIS) {
-                parseExpr(rootNode.createEmptyRightChild());
+                parseExpr(currentNode.createEmptyLeftChild());
+                currentNode = currentNode.createEmptyRightChild();
             }
+            currentNode.setCellToken(Token.createNilToken());
             scanner.moveToNextToken();
         } else {
             System.out.printf("Error");
         }
-    }
-
-    public TreeNode getTree() {
-        return rootNode;
     }
 
 }

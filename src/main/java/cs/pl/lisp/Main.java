@@ -5,9 +5,11 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        Parser parser = new Parser(scanner);
-        parser.start();
+        try {
+            new Parser(new Scanner(System.in), System.out).start();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

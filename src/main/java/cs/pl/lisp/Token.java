@@ -1,7 +1,6 @@
 package cs.pl.lisp;
 
 public class Token {
-    public static final Token NIL = new Token(null, TokenType.NIL);
     private Object tokenValue;
     private TokenType tokenType;
 
@@ -24,5 +23,9 @@ public class Token {
 
     public TokenType getTokenType() {
         return tokenType;
+    }
+
+    public static Token createNilToken() {
+        return new Token(null, TokenType.NIL);
     }
 }
