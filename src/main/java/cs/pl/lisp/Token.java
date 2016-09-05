@@ -9,6 +9,10 @@ public class Token {
         this.tokenType = tokenType;
     }
 
+    static Token createEOFToken() {
+        return new Token("", TokenType.EOF);
+    }
+
     public boolean isAtom() {
         return this.tokenType == TokenType.LITERAL_ATOM || this.tokenType == TokenType.NUMERIC_ATOM;
     }
@@ -27,5 +31,9 @@ public class Token {
 
     public static Token createNilToken() {
         return new Token(null, TokenType.NIL);
+    }
+
+    public boolean isEOF() {
+        return this.tokenType == TokenType.EOF;
     }
 }

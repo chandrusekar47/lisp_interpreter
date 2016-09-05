@@ -28,7 +28,7 @@ public class Scanner {
                 return this;
             } else if (lookaheadCharacter == -1) {
                 lookaheadCharacter = null;
-                this.currentToken = new Token(null, TokenType.EOF);
+                this.currentToken = Token.createEOFToken();
                 return this;
             }
         }
@@ -36,7 +36,7 @@ public class Scanner {
             int currentCharacter = inputStream.read();
             if (currentCharacter == -1) {
                 if (tokenBuffer.length() == 0) {
-                    this.currentToken = new Token(null, TokenType.EOF);
+                    this.currentToken = Token.createEOFToken();
                     return this;
                 }
                 break;
