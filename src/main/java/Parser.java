@@ -1,5 +1,3 @@
-package cs.pl.lisp;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -55,14 +53,14 @@ public class Parser {
             String exprBeforeErrorToken = String.join(" ", tokensProcessed);
             Token errorToken = scanner.getCurrentToken();
             if (errorToken.isEOF()) {
-                errorMessage = "ERROR: Reached end of input while parsing, expecting ) but could not find any.";
+                errorMessage = tokensProcessed.isEmpty() ? "ERROR: No input given." : "ERROR: Reached end of input while parsing, expecting ) but could not find any.";
             } else {
                 String errorTokenValue = errorToken.getTokenValue().toString();
                 List<String> nextThreeTokens = grabNextThreeTokens();
                 String exprAfterErrorToken = String.join(" ", nextThreeTokens);
                 errorMessage = String.format("ERROR: Unexpected token %s at the following location: %n", errorTokenValue) +
                         String.format("%s ----> %s <---- %s%n", exprBeforeErrorToken, errorTokenValue, exprAfterErrorToken) +
-                        String.format("Expecting ( or an identifier or a number");
+                        "Expecting ( or an identifier or a number";
             }
             throw new RuntimeException(errorMessage);
         }

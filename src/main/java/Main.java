@@ -1,5 +1,3 @@
-package cs.pl.lisp;
-
 import java.io.IOException;
 
 public class Main {

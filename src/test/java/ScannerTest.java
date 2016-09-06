@@ -1,5 +1,3 @@
-package cs.pl.lisp;
-
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

@@ -1,5 +1,3 @@
-package cs.pl.lisp;
-
 public enum TokenType {
     LITERAL_ATOM,
     NUMERIC_ATOM,

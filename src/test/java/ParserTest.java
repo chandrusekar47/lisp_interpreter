@@ -1,5 +1,3 @@
-package cs.pl.lisp;
-
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -137,6 +135,17 @@ public class ParserTest {
             parseExpression("12 ab bc cd ( 234 ");
         } catch (Exception e) {
             assertThat(e.getMessage(), is("ERROR: Reached end of input while parsing, expecting ) but could not find any."));
+            return;
+        }
+        fail();
+    }
+
+    @Test
+    public void shouldFailWithACustomMessageIfThereIsNoInputGiven() throws Exception {
+        try {
+            parseExpression("");
+        } catch (Exception e) {
+            assertThat(e.getMessage(), is("ERROR: No input given."));
             return;
         }
         fail();

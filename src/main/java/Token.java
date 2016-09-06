@@ -1,5 +1,3 @@
-package cs.pl.lisp;
-
 public class Token {
     private Object tokenValue;
     private TokenType tokenType;

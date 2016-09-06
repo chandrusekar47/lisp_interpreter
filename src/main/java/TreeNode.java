@@ -1,5 +1,3 @@
-package cs.pl.lisp;
-
 public class TreeNode {
     private TreeNode leftChild;
 
