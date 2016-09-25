@@ -3,6 +3,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -161,7 +162,8 @@ public class ParserTest {
     }
 
     private String parseExpression(String expression, ByteArrayOutputStream outputStream) throws IOException {
-        new Parser(setupScannerFor(expression), outputStream).start();
+        PrintStream printStream = new PrintStream(outputStream);
+        new Parser(setupScannerFor(expression), outputStream, treeNode -> printStream.println(treeNode.toString())).start();
         outputStream.flush();
         return new String(outputStream.toByteArray());
     }

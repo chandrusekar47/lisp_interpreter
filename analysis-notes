@@ -1,0 +1,53 @@
+ - verify if it is a list before car or cdr
+ - car
+ 	* return left subtree
+ 	* return undefined if there is only one node
+ - cdr
+ 	* return right subtree
+ 	* return undefined if there is only one node
+ - cons
+ 	* takes two subtrees and creates a binary tree with them as children
+ - atom
+ 	* returns T if tree has one node 
+ 	* returns NIL if tree has more than one node
+ - int
+ 	* returns T if tree has one node and that node is int
+ 	* returns NIL if tree has more than one node or if the one node it has is not int
+ - null
+ 	* returns T if tree has one node and that node is nil
+ 	* returns NIL if tree has more than one node or if the one node it has is not NIL
+ - eq(s-exp s1, s-exp s2)
+ 	* returns undefined if s1 or s2 has more than one node
+ 	* returns T if s1 and s2 has same numeric atom
+ 	* returns T if s1 and s2 has same literal atom
+ 	* returns NIL otherwise (s1 != s2)
+ - plus (s-exp s1, s-exp s2)
+ 	* returns undefined if s1 is not numeric atom or s2 is not numeric atom.
+ 	* returns tree with one numeric atom node with value as sum (s1, s2)
+ - minus (s-exp s1, s-exp s2)
+ 	* returns undefined if s1 is not numeric atom or s2 is not numeric atom.
+ 	* returns tree with one numeric atom node with value as diff (s1, s2)
+ - less(s-exp s1, s-exp s2)
+ 	* returns undefined if s1 is not numeric atom or if s2 is not numeric atom.
+ 	* returns T if s1 < s2
+ 	* returns NIL otherwise
+ - greater(s-exp s1, s-exp s2)
+ 	* returns undefined if s1 is not numeric atom or if s2 is not numeric atom.
+ 	* returns T if s1 > s2
+ 	* returns NIL otherwise
+- eval(tree)
+	* if tree == literal atom T, return the same tree
+	* if tree == NIL atom, return the same tree
+	* if int(tree) == T then, return the same tree
+	* if atom(tree) == T then, return undefined.
+
+	- list operations
+	* verify length (tree) >= 2, other eval is undefined.
+	* compute car(tree)
+		- if car(tree) in {PLUS, MINUS, TIMES, LESS, GREATER} then eval(tree) -> car(tree)(eval(s1), eval(s2)), where s1 is the car(cdr(tree)) and s2 is cdr(cdr(tree)). 
+			- return undefined if s1 or s2 is not 
+
+
+QUESTIONS:
+(Cons 3 (LESS 2 1)) - output (3 . NIL) or (3)  (just confirming with him)
+(COND ((CONS 1 1) 2))   -->  2 or error?  (NIL/T or NIL/anything)
