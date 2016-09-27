@@ -5,3 +5,4 @@
 (CONS (LESS 4 1) (PLUS 1 2))
 (CONS (PLUS 1 2) (LESS 4 1))
 (COND ((PLUS) 2) (NIL BLEH))
+(CONS (PLUS 1 2) (LESS 4 1))

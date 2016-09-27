@@ -6,7 +6,7 @@ public class TreeNode {
     //    public static final TreeNode UNDEFINED = new TreeNode(null, null, null);
     public static final TreeNode T = new TreeNode(null, null, Token.createTToken());
     public static final TreeNode NIL = new TreeNode(null, null, Token.createNilToken());
-    public static final Map<String, BiFunction<TreeNode, TreeNode, TreeNode>> BINARY_OPERATIONS = new HashMap<String, BiFunction<TreeNode, TreeNode, TreeNode>>() {{
+    public static final Map<String, BiFunction<TreeNode, TreeNode, TreeNode>> BINARY_ATOM_OPERATIONS = new HashMap<String, BiFunction<TreeNode, TreeNode, TreeNode>>() {{
         put("PLUS", BuiltInOperations::plus);
         put("MINUS", BuiltInOperations::minus);
         put("TIMES", BuiltInOperations::times);
@@ -16,10 +16,13 @@ public class TreeNode {
         put("CONS", BuiltInOperations::cons);
     }};
 
-    public static final Map<String, Function<TreeNode, TreeNode>> UNARY_OPERATIONS = new HashMap<String, Function<TreeNode, TreeNode>>() {{
+    public static final Map<String, Function<TreeNode, TreeNode>> UNARY_ATOM_OPERATIONS = new HashMap<String, Function<TreeNode, TreeNode>>() {{
         put("ATOM", BuiltInOperations::atom);
         put("INT", BuiltInOperations::int_);
         put("NULL", BuiltInOperations::null_);
+    }};
+
+    public static final Map<String, Function<TreeNode, TreeNode>> UNARY_TREE_OPERATIONS = new HashMap<String, Function<TreeNode, TreeNode>>() {{
         put("CAR", BuiltInOperations::car);
         put("CDR", BuiltInOperations::cdr);
     }};
@@ -78,11 +81,14 @@ public class TreeNode {
         TreeNode operation = BuiltInOperations.car(this);
         Optional<Token> cellToken = Optional.ofNullable(operation.getCellToken());
         String operationName = cellToken.map(token -> token.getTokenValue() != null ? token.getTokenValue().toString() : "").orElse(operation.toListExpr());
-        if (BINARY_OPERATIONS.containsKey(operationName)) {
-            return EvalFunctions.evaluateBinaryFunction(this, BINARY_OPERATIONS.get(operationName));
+        if (BINARY_ATOM_OPERATIONS.containsKey(operationName)) {
+            return EvalFunctions.evaluateBinaryFunction(this, BINARY_ATOM_OPERATIONS.get(operationName));
         }
-        if (UNARY_OPERATIONS.containsKey(operationName)) {
-            return EvalFunctions.evaluateUnaryFunction(this, UNARY_OPERATIONS.get(operationName));
+        if (UNARY_ATOM_OPERATIONS.containsKey(operationName)) {
+            return EvalFunctions.evaluateUnaryFunction(this, UNARY_ATOM_OPERATIONS.get(operationName));
+        }
+        if (UNARY_TREE_OPERATIONS.containsKey(operationName)) {
+            return EvalFunctions.evaluateUnaryTreeFunction(this, UNARY_TREE_OPERATIONS.get(operationName));
         }
         if ("QUOTE".equals(operationName)) {
             return EvalFunctions.evaluateQuoteOperation(this);

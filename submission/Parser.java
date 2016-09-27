@@ -4,15 +4,18 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Parser {
     private final Scanner scanner;
     private PrintStream outputStream;
+    private final Consumer<TreeNode> parseTreeConsumer;
     private List<String> tokensProcessed;
 
-    public Parser(Scanner scanner, OutputStream outputStream) {
+    public Parser(Scanner scanner, OutputStream outputStream, Consumer<TreeNode> parseTreeConsumer) {
         this.scanner = scanner;
         this.outputStream = new PrintStream(outputStream);
+        this.parseTreeConsumer = parseTreeConsumer;
         this.tokensProcessed = new ArrayList<>();
     }
 // <start> := <Expr> <Start> | <Expr> eof
@@ -24,7 +27,7 @@ public class Parser {
         do {
             TreeNode currentNode = new TreeNode();
             parseExpr(currentNode);
-            outputStream.println(currentNode.toString());
+            parseTreeConsumer.accept(currentNode);
         } while (scanner.getCurrentToken().getTokenType() != TokenType.EOF);
     }
 

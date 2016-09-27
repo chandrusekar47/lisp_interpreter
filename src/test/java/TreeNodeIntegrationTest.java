@@ -81,6 +81,8 @@ public class TreeNodeIntegrationTest {
         assertIncorrectExpression("(PLUS ((1)) 2)", "Unable to evaluate list: ((1)). Unknown operation: (1)");
         assertIncorrectExpression("(PLUS (()) 2)", "Unable to evaluate list: (NIL). Unknown operation: NIL");
         assertIncorrectExpression("((PLUS 1 2))", "Unable to evaluate list: ((PLUS 1 2)). Unknown operation: (PLUS 1 2)");
+        assertIncorrectExpression("(CAR 3)", "Invalid expression: (CAR 3). CAR expects the argument to be an S-expr and not an atom: 3");
+        assertIncorrectExpression("(CDR 3)", "Invalid expression: (CDR 3). CDR expects the argument to be an S-expr and not an atom: 3");
     }
 
     private void assertIncorrectExpression(String expression, String errorMessage) throws IOException {
