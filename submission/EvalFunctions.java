@@ -61,7 +61,7 @@ class EvalFunctions {
         }
         for (TreeNode argument : arguments) {
             TreeNode booleanExprOutput = BuiltInOperations.car(argument).eval();
-            if (!booleanExprOutput.getCellToken().isNil()) {
+            if (!booleanExprOutput.isLeaf() || !booleanExprOutput.getCellToken().isNil()) {
                 return BuiltInOperations.car(BuiltInOperations.cdr(argument)).eval();
             }
         }
