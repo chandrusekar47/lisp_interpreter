@@ -218,7 +218,10 @@ public class TreeNodeIntegrationTest {
         assertIncorrectExpression("(GREATER (PLUS 1 B) 2)", "Unexpected token B");
         assertIncorrectExpression("(EQ 1)", "Incorrect number of arguments: (EQ 1). EQ operation expects 2 arguments, but found 1 arguments");
         assertIncorrectExpression("(EQ 1 2 3)", "Incorrect number of arguments: (EQ 1 2 3). EQ operation expects 2 arguments, but found 3 arguments");
-        assertIncorrectExpression("(EQ (X) (Y))", "Unable to evaluate list: (X). Unknown operation: X");
+        assertIncorrectExpression("(EQ 3 (CONS 1 NIL))", "Unexpected arguments found. EQ operation expects 2 atoms as arguments, actual arguments were 1st arg: 3, 2nd arg: (1)");
+        assertIncorrectExpression("(EQ (CONS 1 2) 4)", "Unexpected arguments found. EQ operation expects 2 atoms as arguments, actual arguments were 1st arg: (1 . 2), 2nd arg: 4");
+        assertIncorrectExpression("(EQ (X) 4)", "Unable to evaluate list: (X). Unknown operation: X");
+        assertIncorrectExpression("(EQ 3 (Y))", "Unable to evaluate list: (Y). Unknown operation: Y");
         assertIncorrectExpression("(ATOM 1 2)", "Incorrect number of arguments: (ATOM 1 2). ATOM operation expects 1 argument, but found 2 arguments");
         assertIncorrectExpression("(ATOM)", "Incorrect number of arguments: (ATOM). ATOM operation expects 1 argument, but found 0 arguments");
         assertIncorrectExpression("(ATOM (PLUS 1))", "Incorrect number of arguments: (PLUS 1). PLUS operation expects 2 arguments, but found 1 arguments");
@@ -228,12 +231,12 @@ public class TreeNodeIntegrationTest {
         assertIncorrectExpression("(NULL 1 2)", "Incorrect number of arguments: (NULL 1 2). NULL operation expects 1 argument, but found 2 arguments");
         assertIncorrectExpression("(NULL)", "Incorrect number of arguments: (NULL). NULL operation expects 1 argument, but found 0 arguments");
         assertIncorrectExpression("(NULL (PLUS 1))", "Incorrect number of arguments: (PLUS 1). PLUS operation expects 2 arguments, but found 1 arguments");
-        assertIncorrectExpression("(CAR 1 2)", "Incorrect number of arguments: (CAR 1 2). CAR operation expects 1 argument, but found 2 arguments");
+        assertIncorrectExpression("(CAR )", "Incorrect number of arguments: (CAR). CAR operation expects 1 argument, but found 0 arguments");
         assertIncorrectExpression("(CAR 1)", "Invalid expression: (CAR 1). CAR expects the argument to be an S-expr and not an atom: 1");
         assertIncorrectExpression("(CAR (1) (2))", "Incorrect number of arguments: (CAR (1) (2)). CAR operation expects 1 argument, but found 2 arguments");
         assertIncorrectExpression("(CAR (1))", "Unable to evaluate list: (1). Unknown operation: 1");
         assertIncorrectExpression("(CAR (PLUS 1 2))", "Invalid expression: (CAR (PLUS 1 2)). CAR expects the argument to be an S-expr and not an atom: 3");
-        assertIncorrectExpression("(CDR 1 2)", "Incorrect number of arguments: (CDR 1 2). CDR operation expects 1 argument, but found 2 arguments");
+        assertIncorrectExpression("(CDR )", "Incorrect number of arguments: (CDR). CDR operation expects 1 argument, but found 0 arguments");
         assertIncorrectExpression("(CDR 1)", "Invalid expression: (CDR 1). CDR expects the argument to be an S-expr and not an atom: 1");
         assertIncorrectExpression("(CDR (1) (2))", "Incorrect number of arguments: (CDR (1) (2)). CDR operation expects 1 argument, but found 2 arguments");
         assertIncorrectExpression("(CDR (1))", "Unable to evaluate list: (1). Unknown operation: 1");
