@@ -123,6 +123,7 @@ public class TreeNodeIntegrationTest {
         assertIncorrectExpression("(DEFUN XYZ (INT) ())", "Invalid value for parameter name at position 1: (DEFUN XYZ (INT) NIL). Parameter name cannot be a reserved keyword INT");
         assertIncorrectExpression("(DEFUN XYZ (X INT) ())", "Invalid value for parameter name at position 2: (DEFUN XYZ (X INT) NIL). Parameter name cannot be a reserved keyword INT");
         assertIncorrectExpression("(DEFUN XYZ (X X) ())", "Parameter names must be unique: (DEFUN XYZ (X X) NIL). X appears more than once");
+        assertIncorrectExpression("(DEFUN XYZ (X X) () ())", "Incorrect number of arguments: (DEFUN XYZ (X X) NIL NIL). DEFUN operation expects 3 arguments, but found 4 arguments");
     }
 
     @Test
