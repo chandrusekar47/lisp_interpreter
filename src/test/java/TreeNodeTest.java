@@ -56,8 +56,6 @@ public class TreeNodeTest extends BaseTest {
         // (2 (4 . 5))
         TreeNode listWithRightNonList = new TreeNode(createAtom(2), new TreeNode(new TreeNode(createAtom(4), createAtom(5), null), createNilNode(), null), null);
 
-        TreeNode listWithNulls = new TreeNode(null, null, null);
-
         assertThat(nilTreeNode.toListExpr(), is("NIL"));
         assertThat(atomTreeNode.toListExpr(), is("5"));
         assertThat(oneItemList.toListExpr(), is("(5)"));
@@ -66,7 +64,6 @@ public class TreeNodeTest extends BaseTest {
         assertThat(threeItemNonList.toListExpr(), is("(2 4 . 5)"));
         assertThat(listWithLeftNonList.toListExpr(), is("((4 . 5) 2)"));
         assertThat(listWithRightNonList.toListExpr(), is("(2 (4 . 5))"));
-        assertThat(listWithNulls.toListExpr(), is(""));
     }
 
 }

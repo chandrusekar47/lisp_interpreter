@@ -1,3 +1,4 @@
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -6,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
@@ -65,73 +67,43 @@ public class TreeNodeIntegrationTest {
 
     @Test
     public void shouldHandleValidExpression() throws Exception {
-        assertListExpression("123", "123");
         assertListExpression("T", "T");
         assertListExpression("NIL", "NIL");
-        assertListExpression("(CAR (CONS 3 NIL))", "3");
-        assertListExpression("(CDR (CONS 3 NIL))", "NIL");
-        assertListExpression("(QUOTE (7))", "(7)"); // changed
-        assertListExpression("(CAR (QUOTE(3)))", "3");
-        assertListExpression("(CDR (QUOTE(3)))", "NIL");
-        assertListExpression("(CONS (CAR (QUOTE (7 10))) (CDR (QUOTE(7 10)))) ", "(7 10)"); //changed
-        assertListExpression("(CONS (PLUS 2 3) (CONS 8 (NULL 5))) ", "(5 8)"); //changed
-        assertListExpression("(PLUS (PLUS 3 5) (CAR (QUOTE (7)))) ", "15");
-        assertListExpression("(CONS 2 (CONS 3 (CONS 4 5)))", "(2 3 4 . 5)");
-        assertListExpression("(CONS 4 5)", "(4 . 5)");
-        assertListExpression("(QUOTE 3)", "3");
-        assertListExpression("(QUOTE (3 4))", "(3 4)"); //changed
-        assertListExpression("(CONS 4 (QUOTE (5 6)))", "(4 5 6)"); //changed
-        assertListExpression("(CONS 4 (QUOTE (5 6 7 8)))", "(4 5 6 7 8)"); //changed
-        assertListExpression("(QUOTE (3 4 5))", "(3 4 5)"); //changed
-        assertListExpression("(CAR (CONS 40 50))", "40");
-        assertListExpression("(CAR (CONS 7 (CONS 8 9)))", "7");
-        assertListExpression("(CDR (CONS 40 50))", "50");
-        assertListExpression("(CAR (QUOTE (3 4)))", "3");
-        assertListExpression("(CDR (QUOTE (3 4)))", "(4)"); //changed
-        assertListExpression("(CONS 30 (CONS 40 50))", "(30 40 . 50)");
-        assertListExpression("(CAR (CONS 30 (CONS 40 50)))", "30");
-        assertListExpression("(CDR (CONS 30 (CONS 40 50)))", "(40 . 50)");
-        assertListExpression("(CAR (CONS (QUOTE (5 7)) 1))", "(5 7)"); //changed
-        assertListExpression("(CONS (QUOTE (5 7)) 1)", "((5 7) . 1)"); //changed
-        assertListExpression("(CAR (CONS 1 (QUOTE (5 7))))", "1");
-        assertListExpression("(CDR (CONS 1 (QUOTE (5 7))))", "(5 7)"); //changed
-        assertListExpression("(CONS 2 (CONS 3 (CONS 4 5)))", "(2 3 4 . 5)");
-        assertListExpression("(CONS 4 5)", "(4 . 5)");
-        assertListExpression("(CONS 4 (QUOTE (5 6)))", "(4 5 6)"); //changed
-        assertListExpression("(ATOM 3)", "T");
-        assertListExpression("(ATOM T)", "T");
-        assertListExpression("(INT 3)", "T");
+        assertListExpression("2929", "2929");
+        assertListExpression("(PLUS (PLUS 1 2) (PLUS 3 4))", "10");
+        assertListExpression("(MINUS (MINUS 5 4) (PLUS 3 2))", "-4");
+        assertListExpression("(TIMES (PLUS 2 3) (MINUS 3 4))", "-5");
+        assertListExpression("(LESS (TIMES 1 2) (PLUS 3 4))", "T");
+        assertListExpression("(GREATER (TIMES 3 4) (PLUS 3 4))", "T");
+        assertListExpression("(EQ (GREATER 3 4) (LESS 3 4))", "NIL");
+        assertListExpression("(ATOM 1)", "T");
+        assertListExpression("(ATOM (PLUS 2 3))", "T");
+        assertListExpression("(ATOM NIL)", "T");
+        assertListExpression("(ATOM ())", "T");
+        assertListExpression("(ATOM (QUOTE (1 2)))", "NIL");
+        assertListExpression("(INT 2)", "T");
         assertListExpression("(INT T)", "NIL");
-        assertListExpression("(NULL 3)", "NIL");
+        assertListExpression("(INT NIL)", "NIL");
+        assertListExpression("(INT (PLUS 1 1))", "T");
+        assertListExpression("(INT (QUOTE (1)))", "NIL");
+        assertListExpression("(NULL 1)", "NIL");
         assertListExpression("(NULL NIL)", "T");
-        assertListExpression("(PLUS 2 3)", "5");
-        assertListExpression("(MINUS 2 3)", "-1");
-        assertListExpression("(TIMES 2 3)", "6");
-        assertListExpression("(EQ 2 3)", "NIL");
-        assertListExpression("(EQ 3 2)", "NIL");
-        assertListExpression("(EQ 3 3)", "T");
-        assertListExpression("(LESS 2 3)", "T");
-        assertListExpression("(LESS 3 2)", "NIL");
-        assertListExpression("(LESS 3 3)", "NIL");
-        assertListExpression("(GREATER 2 3)", "NIL");
-        assertListExpression("(GREATER 3 2)", "T");
-        assertListExpression("(GREATER 3 3)", "NIL");
-        assertListExpression("(PLUS (PLUS 5 6) (MINUS 5 20))", "-4");
-        assertListExpression("(PLUS (PLUS 3 5) (CAR (CONS 7 8))) ", "15");
-        assertListExpression("(QUOTE (7))", "(7)");
-        assertListExpression("(CAR (QUOTE (7)))", "7");
-        assertListExpression("(PLUS (PLUS 3 5) (CAR (QUOTE (7)))) ", "15");
-        assertListExpression("(COND ((NULL NIL) 3) )", "3");
-        assertListExpression("(COND ((NULL 2) 3) ((INT 2) 5) )", "5");
-        assertListExpression("(COND ((NULL 2) 3) ((INT T) 5) ((INT 3) (CAR (QUOTE (7) )) )  )", "7");
-        assertListExpression("(COND ((NULL 2) 3) ((INT T) 5) ((INT 3) (CDR (QUOTE (7) )) )  )", "NIL");
-        assertListExpression("(COND ((NULL 2) 3) ((INT T) 5) ((INT NIL) (CAR (QUOTE (7) )) ) (T T) )", "T");
-    }
-
-    @Test
-    public void name() throws Exception {
-        assertListExpression("(CAR  (CONS (QUOTE (1 2 3)) (QUOTE (1 2 3))) )", "bladsfdsaf");
-
+        assertListExpression("(NULL ())", "T");
+        assertListExpression("(NULL (QUOTE (NIL)))", "NIL");
+        assertListExpression("(CAR (QUOTE (1)))", "1");
+        assertListExpression("(CAR (QUOTE (())))", "NIL");
+        assertListExpression("(CAR (QUOTE ((2 3))))", "(2 3)");
+        assertListExpression("(CDR (QUOTE (1)))", "NIL");
+        assertListExpression("(CDR (QUOTE (1 (2 3))))", "((2 3))");
+        assertListExpression("(CONS (PLUS 1 2) (EQ 1 2))", "(3)");
+        assertListExpression("(CONS (PLUS 1 2) (EQ 1 1))", "(3 . T)");
+        assertListExpression("(QUOTE ASDF)", "ASDF");
+        assertListExpression("(QUOTE (ASDF 1 2))", "(ASDF 1 2)");
+        assertListExpression("(COND ((EQ 2 2) 1) (T ASDF) (BLAH BLAH))", "1");
+        assertListExpression("(COND ((CONS 2 2) 1))", "1");
+        assertListExpression("(COND ((CONS 2 NIL) 1))", "1");
+        assertListExpression("(COND ((PLUS 2 2) 1))", "1");
+        assertListExpression("(COND ((EQ 2 3) 1) ((LESS 3 4) (PLUS 1 2)))", "3");
     }
 
     @Test
@@ -151,6 +123,20 @@ public class TreeNodeIntegrationTest {
         assertIncorrectExpression("(DEFUN XYZ (INT) ())", "Invalid value for parameter name at position 1: (DEFUN XYZ (INT) NIL). Parameter name cannot be a reserved keyword INT");
         assertIncorrectExpression("(DEFUN XYZ (X INT) ())", "Invalid value for parameter name at position 2: (DEFUN XYZ (X INT) NIL). Parameter name cannot be a reserved keyword INT");
         assertIncorrectExpression("(DEFUN XYZ (X X) ())", "Parameter names must be unique: (DEFUN XYZ (X X) NIL). X appears more than once");
+    }
+
+    @Test
+    public void shouldHandleInvalidFunctionInvocations() throws Exception {
+        Map<String, FunctionDefinition> functionDefinitions = new HashMap<>();
+        List<Pair> associations = new ArrayList<>();
+        parseExpression("(DEFUN XYZ (X Y) (BLAH))", treeNode -> treeNode.eval(functionDefinitions, associations));
+        evalFunctionInvocation("(XYZ)", "Arguments mismatch for (XYZ). XYZ function expects 2 arguments but found 0 arguments", functionDefinitions, associations);
+        evalFunctionInvocation("(XYZ BLAH)", "Arguments mismatch for (XYZ BLAH). XYZ function expects 2 arguments but found 1 arguments", functionDefinitions, associations);
+        evalFunctionInvocation("(XYZ 1 (BLAH) (BLEH))", "Arguments mismatch for (XYZ 1 (BLAH) (BLEH)). XYZ function expects 2 arguments but found 3 arguments", functionDefinitions, associations);
+        evalFunctionInvocation("(XYZ 1 (BLAH))", "Unable to evaluate list: (BLAH). Unknown operation: BLAH", functionDefinitions, associations);
+        evalFunctionInvocation("(XYZ 1 BLAH)", "Unexpected token BLAH", functionDefinitions, associations);
+        evalFunctionInvocation("(BLAH 1 2)", "Unable to evaluate list: (BLAH 1 2). Unknown operation: BLAH", functionDefinitions, associations);
+        evalFunctionInvocation("(XYZ 1 2)", "Unable to evaluate list: (BLAH). Unknown operation: BLAH", functionDefinitions, associations);
     }
 
     @Test
@@ -246,4 +232,17 @@ public class TreeNodeIntegrationTest {
             throw new RuntimeException(e);
         }
     }
+
+    private void evalFunctionInvocation(String expr, String expectedErrorMessage, Map<String, FunctionDefinition> functionDefinitions, List<Pair> associations) {
+        parseExpression(expr, treeNode -> {
+            try {
+                treeNode.eval(functionDefinitions, associations);
+            } catch (Exception e) {
+                assertThat(e.getMessage(), is(expectedErrorMessage));
+                return;
+            }
+            Assert.fail("Expecting program to error out, but didn't happen");
+        });
+    }
+
 }
