@@ -23,6 +23,10 @@ public class Token {
         return this.tokenType == TokenType.NUMERIC_ATOM;
     }
 
+    public boolean isValidIdentifier() {
+        return this.tokenValue != null && this.tokenType == TokenType.LITERAL_ATOM && !TreeNode.RESERVED_LITERALS.contains(tokenValue.toString());
+    }
+
     public boolean isNil() {
         return this.tokenType == TokenType.NIL || "NIL".equals(this.tokenValue);
     }
