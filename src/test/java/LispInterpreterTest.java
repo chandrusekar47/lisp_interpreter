@@ -42,6 +42,20 @@ public class LispInterpreterTest {
         ));
     }
 
+    @Test
+    public void name() throws Exception {
+        evaluateProgram(asList(
+                "(DEFUN GENNUMS (X) (COND ((EQ X 0) NIL) (T (CONS X (GENNUMS (MINUS X 1))))))",
+                "(DEFUN MEM (X LIST) (COND ( (NULL LIST) NIL ) ( T (COND ( (EQ X (CAR LIST)) T ) ( T (MEM X (CDR LIST)))))))",
+                "(MEM 12 (GENNUMS 20))"
+        ), asList(
+                "GENNUMS",
+                "MEM",
+                "T",
+                ""
+        ));
+    }
+
     private void evaluateProgram(List<String> inputLines, List<String> expectedOutputLines) throws IOException {
         String expectedOutput = String.join(System.lineSeparator(), expectedOutputLines);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
